@@ -2,29 +2,36 @@
 
 A personal learning framework: an objective, a tree of measurable outcomes, progressively detailed planning, weekly feedback, and knowledge review.
 
-The current version provides a file structure, instructions, templates, and an integrity checker. No curriculum has been defined yet. Automated tutoring, exercise discovery, a user interface, and a working review scheduler are not implemented. A specific curriculum, including preparation for an ML internship, will be added in a separate change.
+The pilot runtime supports validated state updates, recoverable transactions, weekly plans and reports, FSRS reviews, and sessions that resume from saved state. A goal-clarification skill establishes the agreement before a curriculum is scheduled. Teaching and assessment remain conversational; the program records evidence and checks consistency.
 
 ## Getting started
 
-1. Read the [workflow](docs/workflow.md) and [data model](docs/data-model.md). Agents must also read [AGENTS.md](AGENTS.md).
-2. Fill in `state/objective.json`: the intended outcome, success criteria, constraints, weekly hours, and time zone. Leave unknown values as `null`.
-3. Run an initial assessment. Record attempts in `state/assessment-log.jsonl`; an unassessed skill is not evidence of zero knowledge.
-4. Build the outcome tree in `state/goals.json` using `templates/goal.json`. Duration estimates are hypotheses.
-5. Prepare the next weekly plan in `state/plans/` using the template. Define assessment criteria before starting and commit the plan.
-6. Follow the workflow. Record cards and attempts as they happen; review the week when the calendar week ends.
-7. Run the checks before committing:
-
 ```sh
-python3 scripts/check.py
-python3 -m unittest discover -s tests -v
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python scripts/tutor.py init
+.venv/bin/python scripts/tutor.py check
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
-Run these commands from the repository root. They do not modify learning data. The checker requires no third-party Python packages. To check a copy of the state, use `python3 scripts/check.py --state /absolute/path/to/state`.
+Python 3.11+ and macOS/Linux are required. Normal runtime installation only needs `requirements.txt`. Use the [CLI guide](docs/cli.md) for the complete command sequence and the [workflow](docs/workflow.md) for learning decisions. Agents also read [AGENTS.md](AGENTS.md).
+
+Create an isolated use case instead of putting personal learning data in this shared repository:
+
+```sh
+.venv/bin/python scripts/create_instance.py ../my-learning --objective "My learning objective"
+```
+
+Inside that workspace, use `python3 tutor.py` and ask for `$exy-clarify-goal`. It saves partial answers and a concrete agreement for confirmation before weekly planning. Its unknowns remain explicit until supplied or diagnosed. The `exy-ml` workspace is being prepared separately; no ML proficiency, availability, or curriculum is assumed.
 
 ## Structure
 
 | Path | Purpose |
 | --- | --- |
+| `state/foundation.json` | Goal clarification, open questions, and confirmed agreement |
+| `state/settings.json` | Pinned FSRS settings |
+| `state/sessions.json` | Sessions and continuation points |
+| `state/session-log.jsonl` | Session history |
 | `state/objective.json` | Overall objective, constraints, and time budget |
 | `state/goals.json` | Outcome tree and prerequisite links |
 | `state/plans/` | Weekly plan revisions |
@@ -34,22 +41,29 @@ Run these commands from the repository root. They do not modify learning data. T
 | `state/card-review-log.jsonl` | History of card reviews |
 | `templates/` | Record templates with empty values |
 | `docs/` | Instructions and storage rules |
-| `scripts/check.py` | Structure and reference integrity checks |
+| `scripts/check.py` | Locked integrity check and interrupted-transaction recovery |
+| `scripts/tutor.py` | Public CLI for planning, sessions, evidence, and reviews |
+| `.agents/skills/exy-clarify-goal/` | Goal-clarification skill |
 
 All paths are relative to the repository root. `state/` is intentionally tracked in Git to preserve learning history. Store secrets and materials containing personal information in the ignored `private/` directory. Publishing the repository requires a separate user decision.
 
+## Pilot readiness
+
+Implemented: safe writes with interruption recovery, concurrent-writer serialization, immutable weekly revisions, append-only event history, weekly reports and carryover proposals, FSRS scheduling with review budgets and new-card limits, answer-before-reveal review flow, and fresh-session continuation. The integration tests exercise the public CLI in isolated workspaces.
+
+Before the real two-week pilot, the learner still needs to supply goals and plans, confirm the foundation, and complete any diagnostic work needed for placement. The tutor can then prepare the initial roadmap and the first two weekly plans. No simulated assessment is recorded as real progress.
+
 ## Next steps
 
-- Integrate a library implementation of FSRS and a review command that saves the event and updated card state atomically.
-- Add queue selection that respects time limits, overdue reviews, and new cards.
-- Add automatic saving, protection against concurrent writes, and checks for changes to historical events.
-- Automate exercise selection, weekly reports, and proposed plan adjustments.
+- Run the two-week pilot and evaluate learning outcomes, retention, and maintenance effort.
+- Automate exercise discovery and evidence-based roadmap adjustment after observing the pilot.
+- Add replay-based correction of historical FSRS ratings and explicit scheduler-version migrations.
 - Add PDF import for study notes and written learning materials, preserving source and page references for use in lessons, exercises, and cards.
 - Add a card-creation skill that turns study notes and learned topics into focused review cards, verifies answers against sources, links cards to learning goals, and checks for duplicates before adding them to the shared registry.
-- Add a subject-specific curriculum in a separate change after the initial assessment and agreement on the objective.
+- Add a subject-specific curriculum in the separate instance after goal clarification and placement.
 
 ## Foundations and limitations
 
-The workflow uses spaced review, retrieval practice, explanatory questions, and alternating worked examples with independent exercises: [IES / What Works Clearinghouse](https://ies.ed.gov/ncee/wwc/PracticeGuide/1). Card scheduling will use [FSRS](https://open-spaced-repetition.github.io/ts-fsrs/).
+The workflow uses spaced review, retrieval practice, explanatory questions, and alternating worked examples with independent exercises: [IES / What Works Clearinghouse](https://ies.ed.gov/ncee/wwc/PracticeGuide/1). Card scheduling uses the pinned [Python FSRS implementation](https://github.com/open-spaced-repetition/py-fsrs).
 
 These sources support individual methods. The effectiveness of this particular framework has not yet been evaluated. Evaluate it through independent solutions to new problems, delayed assessments, and time spent maintaining the system.

@@ -16,10 +16,12 @@ Help the user move toward the recorded objective through practice and assessment
 - Do not overwrite published plans, reports, or historical events. Create the next plan revision. Correct an erroneous event with a new record using `supersedes`, keeping the history visible.
 - When splitting a goal, preserve its ID, turn it into a branch, and add child goals. Do not delete nodes referenced by history. Mark cancelled outcomes as `dropped`, with a reason in `notes`.
 - Reference cards and assessments by stable IDs. Do not copy card state into a weekly report or goal.
-- Do not calculate FSRS state or review dates with the language model. Until the library is integrated, keep `scheduler` and `due_at` as `null`; manual reviews may be recorded as actual events.
+- Use the CLI for all state changes. It validates under a lock and commits recoverable transactions. Do not edit scheduler state or logs by hand; FSRS computes intervals from actual answer ratings.
+- Start new use cases with `.agents/skills/exy-clarify-goal/SKILL.md`. Do not schedule a week before the user confirms the foundation.
+- Start or resume sessions through the CLI, record actual evidence, and save a continuation note. The answer must be recorded before revealing a card reference; rate only after comparison.
 - Apply previously agreed adjustments to the near-term plan. Discuss changes to the overall objective, deadline, or user commitments with the user first.
-- After changes, run `python3 scripts/check.py`, review the diff, and commit the changes. Do not include unrelated changes made by others.
+- After changes, run `.venv/bin/python scripts/check.py`, review the diff, and commit the changes. Do not include unrelated changes made by others.
 
 ## Current scope
 
-Keep the framework subject-independent. Do not add an ML curriculum, vacancies, learning topics, or assumptions about the user's proficiency until separately requested.
+Keep the shared framework subject-independent. Personal curricula and learning records belong in separate instances. The requested `exy-ml` instance awaits user-provided goals and plans; do not invent its capacity, proficiency, or curriculum.

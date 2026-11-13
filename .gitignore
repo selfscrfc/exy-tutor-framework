@@ -17,3 +17,7 @@ tmp/
 *.log
 # Local secrets and materials that must stay out of version history.
 private/
+state/.lock
+state/.exy-write-*
+state/plans/.exy-write-*
+state/weekly-reviews/.exy-write-*

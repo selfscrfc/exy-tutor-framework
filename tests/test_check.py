@@ -35,13 +35,13 @@ class FrameworkChecks(unittest.TestCase):
         (self.state / name).write_text(''.join(json.dumps(e, ensure_ascii=False) + '\n' for e in events))
 
     def run_check(self, ok=True, contains=None):
-        before = {str(p.relative_to(self.state)): p.read_bytes() for p in self.state.rglob('*') if p.is_file()}
+        before = {str(p.relative_to(self.state)): p.read_bytes() for p in self.state.rglob('*') if p.is_file() and p.name != '.lock'}
         proc = subprocess.run([sys.executable, str(ROOT / 'scripts/check.py'), '--state', str(self.state)],
                               capture_output=True, text=True)
         self.assertEqual(proc.returncode, 0 if ok else 1, proc.stdout + proc.stderr)
         if contains:
             self.assertIn(contains, proc.stdout + proc.stderr)
-        after = {str(p.relative_to(self.state)): p.read_bytes() for p in self.state.rglob('*') if p.is_file()}
+        after = {str(p.relative_to(self.state)): p.read_bytes() for p in self.state.rglob('*') if p.is_file() and p.name != '.lock'}
         self.assertEqual(before, after, 'The checker must be read-only')
 
     def fixture(self):

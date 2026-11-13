@@ -125,6 +125,7 @@ def weekly_files(state, directory, template):
 
 
 def check(state):
+    runtime = (state / 'settings.json').exists()
     objective = read_json(state / 'objective.json')
     shape(objective, read_json(ROOT / 'templates/objective.json'), 'objective')
     require(objective['schema_version'] == 1, 'Unknown format version')
@@ -190,12 +191,14 @@ def check(state):
         if card['status'] == 'active':
             require(card['goal_ids'] and all(card[key].strip() for key in ['prompt', 'answer', 'source'])
                     and card['verified_at'], f'{identifier}: active card is unverified or incomplete')
-        require(card['scheduler'] is None and card['due_at'] is None,
-                f'{identifier}: FSRS is not integrated yet; scheduler state must be null')
+        if not runtime:
+            require(card['scheduler'] is None and card['due_at'] is None,
+                    f'{identifier}: FSRS is not integrated yet; scheduler state must be null')
     for identifier, event in reviews.items():
         references([event['card_id']], cards, identifier)
         require(event['rating'] in {'again', 'hard', 'good', 'easy'}, f'{identifier}: unknown rating')
-        require(event['scheduler_version'] is None, f'{identifier}: FSRS is not integrated yet')
+        if not runtime:
+            require(event['scheduler_version'] is None, f'{identifier}: FSRS is not integrated yet')
         number(event['duration_seconds'], identifier)
     plans = weekly_files(state, 'plans', 'plan')
     for name, plan in plans.items():
@@ -220,6 +223,9 @@ def check(state):
         references(report['completed'], goals, name)
         references(report['next_focus'], goals, name)
         number(report['actual_hours'], name)
+    if runtime:
+        from exy.validation import validate_runtime
+        validate_runtime(state, objective, goals, cards, assessments, reviews, plans)
     return f'{len(goals)} goals, {len(cards)} cards, {len(assessments)} assessments, {len(reviews)} reviews, {len(plans)} plans'
 
 
@@ -228,8 +234,11 @@ def main():
     parser.add_argument('--state', type=Path, default=ROOT / 'state')
     args = parser.parse_args()
     try:
-        summary = check(args.state)
-    except (ValueError, OSError, KeyError, TypeError, AttributeError, RecursionError) as exc:
+        sys.path.insert(0, str(ROOT))
+        from exy.store import Store
+        with Store(args.state) as store:
+            summary = check(store.path)
+    except (ValueError, OSError, KeyError, TypeError, AttributeError, RecursionError, ModuleNotFoundError) as exc:
         print(f'ERROR: {exc}', file=sys.stderr)
         return 1
     print(f'OK: {summary}. Structure checked; learning quality is not evaluated.')

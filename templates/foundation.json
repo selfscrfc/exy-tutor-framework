@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "draft",
+  "objective": null,
+  "motivation": null,
+  "success_criteria": [],
+  "scope": {
+    "included": [],
+    "excluded": []
+  },
+  "target_date": null,
+  "weekly_hours": null,
+  "timezone": null,
+  "baseline": {
+    "self_report": null,
+    "evidence": [],
+    "diagnostic_status": "pending"
+  },
+  "resources": [],
+  "constraints": [],
+  "priorities": [],
+  "tradeoffs": [],
+  "open_questions": [],
+  "confirmed_at": null,
+  "confirmation_quote": null
+}

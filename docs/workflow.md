@@ -2,6 +2,8 @@
 
 ## 1. Start
 
+Use the goal-clarification skill and `foundation save` to record and confirm the learning agreement. See [CLI guide](cli.md) for all state-changing commands. The user supplies actual constraints and confirms the proposed foundation before a weekly plan is published.
+
 Record the overall objective and an observable success criterion. Distinguish outcomes within the learner's control from external conditions. Record available weekly hours, constraints, and a target date if one exists. Then run an initial assessment using small independent tasks. Confirm gaps through attempts; do not replace an unknown proficiency level with a guess.
 
 The tree describes the outcomes needed for the objective. The weekly plan describes the work currently selected. A leaf is usually estimated to take about one week of available study time, but the calendar does not define the tree structure. Several small outcomes can fit into one week; one outcome can continue into the next.
@@ -24,12 +26,14 @@ Create `state/plans/YYYY-MM-DD.r1.json`, using the week's start date in the chos
 
 Once the week begins, do not edit the original plan. If the scope changes, create `r2`, fill in `change_reason`, and preserve `r1`. Compare actual results with the original plan in the weekly report and explain changes separately.
 
-Select activities from a suitable course, documentation, or exercise bank, or have the agent create them with a verified solution. Record the source and expected outcome. The current skeleton does not discover exercises automatically.
+Select activities from a suitable course, documentation, or exercise bank, or have the agent create them with a verified solution. Record the source and expected outcome. Exercise discovery remains conversational; the runtime does not search for or generate exercises automatically.
 
 ## 4. Learning session
 
+Use `session start` or `session resume`; use `session checkpoint` during work and `session end` with actual cumulative minutes and a continuation note. A fresh conversation resumes from these records.
+
 1. Read the current plan, its related goals, and recent errors.
-2. Complete the planned portion of reviews. Until FSRS is integrated, select it explicitly and do not imply that an automatic schedule exists.
+2. Use `review queue` and `review next` for scheduled cards, `review answer` to record recall before revealing the answer, and `review rate` to save the rating and schedule.
 3. For new material, work through an example and then give an independent exercise.
 4. Examine the actual solution. Record assistance, the result, and an artifact reference in the assessment log.
 5. Create a small number of useful cards from important ideas and errors. Verify answers and sources; suspend redundant cards rather than deleting their history.
@@ -49,7 +53,7 @@ To complete a goal, successful independent attempts must cover all its criteria,
 
 The card registry is separate from the tree. A card may relate to several goals. Record the recall attempt before showing the answer; do not rate a forgotten answer as `hard`. Ratings: `again` means not recalled, `hard` means recalled with difficulty, `good` means recalled, and `easy` means recalled easily.
 
-The future FSRS scheduler takes the actual rating and timestamp and returns updated state and a review date. Apply session time limits on top of the schedule: overdue and due reviews first, then new cards if the budget allows. Missed reviews do not count as completed.
+The pinned Python FSRS scheduler takes the actual rating and timestamp and returns updated state and a review date. Its settings are saved in `state/settings.json` and recorded with each scheduled review. Apply session time limits on top of the schedule: overdue and due reviews first, then new cards if the budget allows. Missed reviews do not count as completed.
 
 If the queue grows, reduce new cards and reconsider their usefulness and difficulty. Repeated errors should lead back to an explanation and exercise. Fix or suspend a poor card instead of making the learner repeatedly guess its answer.
 
