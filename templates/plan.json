@@ -1,0 +1,19 @@
+{
+  "week_id": "YYYY-MM-DD",
+  "revision": 1,
+  "change_reason": null,
+  "budget_hours": null,
+  "items": [
+    {
+      "goal_id": "goal-001",
+      "expected_result": "",
+      "success_criteria": [],
+      "assistance_policy": "",
+      "activities": [],
+      "estimated_hours": null
+    }
+  ],
+  "review_hours": null,
+  "assessment_hours": null,
+  "buffer_hours": null
+}

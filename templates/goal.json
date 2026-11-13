@@ -1,0 +1,20 @@
+{
+  "id": "goal-001",
+  "title": "",
+  "parent_id": null,
+  "depends_on": [],
+  "status": "draft",
+  "criteria": [
+    {
+      "id": "criterion-1",
+      "description": "",
+      "verification": ""
+    }
+  ],
+  "estimate_hours": {
+    "min": null,
+    "max": null
+  },
+  "evidence_ids": [],
+  "notes": ""
+}

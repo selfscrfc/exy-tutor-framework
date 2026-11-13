@@ -1,0 +1,14 @@
+{
+  "week_id": "YYYY-MM-DD",
+  "revision": 1,
+  "change_reason": null,
+  "baseline_plan": "YYYY-MM-DD.r1.json",
+  "effective_plan": "YYYY-MM-DD.r1.json",
+  "actual_hours": null,
+  "completed": [],
+  "assessment_ids": [],
+  "card_ids": [],
+  "deviations": [],
+  "decisions": [],
+  "next_focus": []
+}

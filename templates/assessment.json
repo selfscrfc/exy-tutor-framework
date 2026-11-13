@@ -1,0 +1,17 @@
+{
+  "id": "assessment-001",
+  "goal_id": "goal-001",
+  "criterion_ids": [
+    "criterion-1"
+  ],
+  "occurred_at": null,
+  "task": "",
+  "rubric": "",
+  "assistance_policy": "",
+  "assistance": "none",
+  "result": "unknown",
+  "artifact": "",
+  "errors": [],
+  "duration_minutes": null,
+  "supersedes": null
+}

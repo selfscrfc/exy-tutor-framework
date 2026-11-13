@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "title": null,
+  "success_criteria": [],
+  "target_date": null,
+  "constraints": [],
+  "weekly_hours": null,
+  "timezone": null,
+  "planning": {
+    "detailed_weeks": 2,
+    "weekly_outcomes_weeks": 8,
+    "monthly_replan": true
+  },
+  "review_budget_minutes_per_session": null,
+  "max_new_cards_per_session": null
+}

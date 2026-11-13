@@ -1,0 +1,14 @@
+{
+  "id": "card-001",
+  "goal_ids": [
+    "goal-001"
+  ],
+  "prompt": "",
+  "answer": "",
+  "source": "",
+  "verified_at": null,
+  "status": "draft",
+  "scheduler": null,
+  "due_at": null,
+  "notes": ""
+}
