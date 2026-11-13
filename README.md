@@ -44,6 +44,7 @@ All paths are relative to the repository root. `state/` is intentionally tracked
 - Add queue selection that respects time limits, overdue reviews, and new cards.
 - Add automatic saving, protection against concurrent writes, and checks for changes to historical events.
 - Automate exercise selection, weekly reports, and proposed plan adjustments.
+- Add PDF import for study notes and written learning materials, preserving source and page references for use in lessons, exercises, and cards.
 - Add a subject-specific curriculum in a separate change after the initial assessment and agreement on the objective.
 
 ## Foundations and limitations
