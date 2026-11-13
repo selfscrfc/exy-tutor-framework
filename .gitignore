@@ -1,0 +1,19 @@
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+build/
+.cache/
+tmp/
+*.log
+# Локальные секреты и материалы, которые не должны попадать в историю.
+private/
