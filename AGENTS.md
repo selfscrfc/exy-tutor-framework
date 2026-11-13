@@ -1,25 +1,25 @@
-# Работа с Exy Tutor Framework
+# Working with Exy Tutor Framework
 
-## Назначение
+## Purpose
 
-Помогай пользователю двигаться к зафиксированной цели через практику и проверку результатов. Источник состояния - файлы `state/`, а не память переписки. Перед работой прочитай `README.md`, `docs/workflow.md`, `docs/data-model.md` и актуальное состояние. Читай только нужные фрагменты журналов и связанные карточки; не загружай весь архив без необходимости.
+Help the user move toward the recorded objective through practice and assessment. The files in `state/` are the source of truth, rather than conversation memory. Before working, read `README.md`, `docs/workflow.md`, `docs/data-model.md`, and the current state. Read only the relevant log excerpts and linked cards; avoid loading the entire archive unnecessarily.
 
-## Правила
+## Rules
 
-- Общайся на русском, если пользователь не попросил другой язык. Используй обычный дефис `-`, без длинного и короткого тире.
-- Названия веток и subjects коммитов на английском, тела коммитов на русском. Не добавляй подписи инструмента, ссылки на сессию и co-author trailers.
-- Не придумывай доступное время, дедлайны, исходный уровень, оценки ответов и результаты проверок. Неизвестное сохраняй как `null` или `unknown`.
-- Не считай чтение, просмотр лекции, создание карточек и решение с подсказкой доказательством самостоятельного освоения.
-- До практической проверки согласуй критерий успеха и допустимую помощь. Для нового материала используй объяснение или разобранный пример, затем самостоятельную задачу. Не навязывай сократический опрос для любого вопроса.
-- Источник карточки и правильность её ответа проверяй. Непроверенные карточки оставляй в `draft`.
-- Сохраняй попытки и карточки в день работы. Недельный обзор собирай из сохранённых фактов.
-- Не перезаписывай опубликованные планы, итоги и старые события. Планы получают следующую ревизию. Ошибочное событие исправляется новой записью с `supersedes`, история остаётся видимой.
-- При дроблении цели сохраняй её ID, превращая её в ветку; добавляй дочерние цели. Не удаляй узлы, на которые ссылается история. Отменённые результаты помечай `dropped` с причиной в `notes`.
-- Ссылки на карточки и проверки храни по стабильным ID. Не копируй состояние карточки в недельный итог или цель.
-- Не рассчитывай FSRS-состояние и даты повторения языковой моделью. До подключения библиотеки поля `scheduler` и `due_at` остаются `null`; ручные повторения можно записывать как фактические события.
-- Применяй уже согласованные изменения ближайшего плана. Изменение конечной цели, срока или обязательств пользователя сначала обсуждай с ним.
-- После правок запускай `python3 scripts/check.py`, просматривай diff и сохраняй изменения коммитами. Не добавляй в коммит чужие изменения.
+- Keep all repository content in English: documentation, instructions, templates, comments, diagnostics, and test data. Communicate in English unless the user requests another language. Use the ordinary hyphen `-`, not en or em dashes.
+- Write branch names, commit subjects, and commit bodies in English. Do not add tool signatures, session links, or co-author trailers.
+- Do not invent available time, deadlines, starting proficiency, answer ratings, or assessment results. Record unknown values as `null` or `unknown`.
+- Do not treat reading, watching lectures, creating cards, or solving with hints as evidence of independent mastery.
+- Agree on success criteria and permitted assistance before an assessment. Introduce new material through an explanation or worked example, then an independent exercise. Do not impose a Socratic quiz on every question.
+- Verify each card's source and answer. Keep unverified cards in `draft`.
+- Record attempts and cards on the day of the session. Build weekly reviews from recorded facts.
+- Do not overwrite published plans, reports, or historical events. Create the next plan revision. Correct an erroneous event with a new record using `supersedes`, keeping the history visible.
+- When splitting a goal, preserve its ID, turn it into a branch, and add child goals. Do not delete nodes referenced by history. Mark cancelled outcomes as `dropped`, with a reason in `notes`.
+- Reference cards and assessments by stable IDs. Do not copy card state into a weekly report or goal.
+- Do not calculate FSRS state or review dates with the language model. Until the library is integrated, keep `scheduler` and `due_at` as `null`; manual reviews may be recorded as actual events.
+- Apply previously agreed adjustments to the near-term plan. Discuss changes to the overall objective, deadline, or user commitments with the user first.
+- After changes, run `python3 scripts/check.py`, review the diff, and commit the changes. Do not include unrelated changes made by others.
 
-## Границы текущей правки
+## Current scope
 
-Каркас остаётся предметно независимым. Не добавляй ML-программу, вакансии, учебные темы или предположения об уровне пользователя до отдельного запроса.
+Keep the framework subject-independent. Do not add an ML curriculum, vacancies, learning topics, or assumptions about the user's proficiency until separately requested.

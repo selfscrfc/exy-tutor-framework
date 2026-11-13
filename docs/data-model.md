@@ -1,43 +1,43 @@
-# Модель данных
+# Data model
 
-## Общие правила
+## General rules
 
-Формат версии 1. JSON хранится в UTF-8; каждый журнал JSONL содержит по одному JSON-объекту на строку. Пустые массивы и журналы допустимы до начала обучения. Шаблоны содержат незаполненные значения и сами не являются рабочим состоянием.
+Format version 1. JSON uses UTF-8; each JSONL log contains one JSON object per line. Empty arrays and logs are valid before learning starts. Templates contain unfilled values and are not themselves live state.
 
-ID стабильны и уникальны внутри типа: `goal-001`, `card-001`, `assessment-001`, `review-001`. Время события - ISO 8601 с часовым поясом, например `2030-01-07T18:30:00+03:00`. Неделя задаётся датой начала `YYYY-MM-DD`.
+IDs are stable and unique within each type: `goal-001`, `card-001`, `assessment-001`, `review-001`. Event timestamps use ISO 8601 with a time zone, such as `2030-01-07T18:30:00+03:00`. A week is identified by its start date, `YYYY-MM-DD`.
 
-## Сущности
+## Entities
 
-| Файл | Данные и связи |
+| File | Data and relationships |
 | --- | --- |
-| `objective.json` | Формулировка конечной цели, критерии результата, ограничения и настройки нагрузки |
-| `goals.json` | Массив узлов: родитель, предпосылки, критерии, оценка часов, статус, ссылки на доказательства |
-| `plans/*.json` | Ревизия недельного плана: ID целей, ожидаемые результаты и критерии, задачи, бюджет |
-| `weekly-reviews/*.json` | Итог недели: ссылки на планы, факт, ID попыток и карточек, причины отклонений и решения |
-| `cards.json` | Общий реестр: вопрос, ответ/рубрика, источник, связанные цели, статус и состояние планировщика |
-| `assessment-log.jsonl` | Практические попытки: цель, покрытые критерии, условия помощи, результат, артефакт и ошибки |
-| `card-review-log.jsonl` | Повторения: ID карточки, оценка ответа, время, длительность и версия планировщика |
+| `objective.json` | Overall objective, success criteria, constraints, and workload settings |
+| `goals.json` | Array of nodes: parent, prerequisites, criteria, estimated hours, status, and evidence references |
+| `plans/*.json` | Weekly plan revision: goal IDs, expected outcomes and criteria, activities, and budget |
+| `weekly-reviews/*.json` | Weekly report: plan references, actual results, attempt and card IDs, reasons for deviations, and decisions |
+| `cards.json` | Shared registry: prompt, answer/rubric, source, related goals, status, and scheduler state |
+| `assessment-log.jsonl` | Practical attempts: goal, covered criteria, permitted assistance, result, artifact, and errors |
+| `card-review-log.jsonl` | Reviews: card ID, answer rating, timestamp, duration, and scheduler version |
 
-Точные поля см. в `templates/`. Карточки связаны с целями через `goal_ids`. Обратные списки на целях вычисляются, а не копируются. Недельный итог хранит только `card_ids` и `assessment_ids`, не копии состояния карточек.
+See `templates/` for exact fields. Cards link to goals through `goal_ids`. Reverse lists on goals are derived rather than duplicated. Weekly reports store only `card_ids` and `assessment_ids`, not copies of card state.
 
-## Состояния
+## States
 
-Цели: `draft`, `ready`, `active`, `blocked`, `completed`, `dropped`. `blocked` требует причины в `notes`. У листа есть критерии результата с локальными ID и проверкой. Ветка может оставаться крупной и без критериев, пока не уточнена; для её завершения критерии необходимы.
+Goals: `draft`, `ready`, `active`, `blocked`, `completed`, `dropped`. A `blocked` goal requires a reason in `notes`. A leaf has outcome criteria with local IDs and a verification method. A branch may remain broad and have no criteria until refined; completion requires criteria.
 
-Карточки: `draft`, `active`, `suspended`, `archived`. Активная карточка имеет вопрос, ответ/рубрику, источник и дату проверки. `scheduler` и `due_at` равны `null`, пока реальный планировщик не подключён. Для существенного изменения проверяемого знания создать новую карточку, старую архивировать; не переносить историю памяти на другое содержание.
+Cards: `draft`, `active`, `suspended`, `archived`. An active card has a prompt, answer/rubric, source, and verification timestamp. `scheduler` and `due_at` remain `null` until a real scheduler is integrated. If the knowledge being tested changes substantially, create a new card and archive the old one; do not transfer memory history to different content.
 
-Практические попытки: `unknown`, `passed`, `partial`, `failed`. `assistance`: `none`, `allowed_tools`, `hints`, `solution_shown`. Самостоятельными могут считаться `none` и `allowed_tools`, если условия были определены до проверки. `rubric` сохраняет снимок критерия на момент попытки; изменение текущей цели не переписывает историю.
+Practical attempts: `unknown`, `passed`, `partial`, `failed`. Values for `assistance`: `none`, `allowed_tools`, `hints`, `solution_shown`. Attempts with `none` or `allowed_tools` may count as independent if the conditions were defined before assessment. `rubric` preserves a snapshot of the criterion at the time of the attempt; changing the current goal does not rewrite history.
 
-## История и изменения
+## History and changes
 
-Журналы дополняются, старые события не редактируются. Для исправления записать новое событие с `supersedes`, указывающим ID предыдущего события того же типа и той же цели/карточки. Актуальными считаются события, которые не заменены последующими. Новая попытка после дополнительного обучения не является исправлением старой и не использует `supersedes`.
+Logs are append-only; do not edit historical events. To correct an event, append a new event with `supersedes` pointing to the previous event of the same type and for the same goal/card. Events that have not been superseded are current. A new attempt after further learning is not a correction and does not use `supersedes`.
 
-Недельные планы и итоги сохраняются ревизиями. Файл должен называться `YYYY-MM-DD.rN.json`. План ревизии 1 остаётся базой сравнения, следующие содержат причину изменения. Правило неизменности поддерживается рабочим процессом и Git; автоматической защиты от перезаписи в каркасе нет.
+Weekly plans and reports are saved as revisions. File names must follow `YYYY-MM-DD.rN.json`. Plan revision 1 remains the comparison baseline; later revisions include a reason for the change. The workflow and Git preserve history; the skeleton does not automatically prevent overwrites.
 
-При дроблении лист сохраняет ID и становится родителем. Существующие карточки и попытки остаются привязаны к нему, при необходимости добавляются более точные связи. Завершённый родитель с незавершёнными детьми должен быть пересмотрен.
+When splitting a leaf, preserve its ID and make it a parent. Existing cards and attempts remain linked to it; add more specific links when needed. Revisit a completed parent if its children are incomplete.
 
-## Что проверяет check.py
+## What check.py verifies
 
-Проверка читает реальное состояние: формат контейнеров, обязательные ключи, ID, ссылки, циклы родительства и предпосылок, числовые ограничения, версии недельных файлов и основания для статуса `completed`. Исправленные события не используются как действующие доказательства. Ошибка приводит к ненулевому коду выхода.
+The checker reads actual state and validates container formats, required keys, IDs, references, parent/prerequisite cycles, numeric constraints, weekly file revisions, and evidence supporting `completed` status. Superseded events cannot be used as current evidence. A failed check returns a nonzero exit code.
 
-Проверка не оценивает истинность ответа, качество задания, педагогическую пригодность карточки и реальность времени. Она не реализует FSRS и не гарантирует неизменность ранее закоммиченных данных. Эти ограничения нельзя заменять сообщением об успешной структурной проверке.
+The checker does not judge answer correctness, exercise quality, card suitability, or whether recorded time is accurate. It does not implement FSRS or guarantee that previously committed data remains unchanged. A successful structural check does not establish any of these properties.

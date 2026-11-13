@@ -1,53 +1,53 @@
 # Exy Tutor Framework
 
-Каркас персонального обучения: цель, дерево проверяемых результатов, планирование с постепенной детализацией, недельная обратная связь и повторение знаний.
+A personal learning framework: an objective, a tree of measurable outcomes, progressively detailed planning, weekly feedback, and knowledge review.
 
-Сейчас это файловая структура, инструкции, шаблоны и проверка целостности. Учебная программа ещё не задана. Автоматического преподавателя, поиска задач, интерфейса и работающего планировщика повторений пока нет. Реализация конкретной программы, в том числе подготовки к ML-стажировке, выполняется отдельной правкой.
+The current version provides a file structure, instructions, templates, and an integrity checker. No curriculum has been defined yet. Automated tutoring, exercise discovery, a user interface, and a working review scheduler are not implemented. A specific curriculum, including preparation for an ML internship, will be added in a separate change.
 
-## Начало работы
+## Getting started
 
-1. Прочитать [порядок работы](docs/workflow.md) и [модель данных](docs/data-model.md). Агент дополнительно читает [AGENTS.md](AGENTS.md).
-2. Заполнить `state/objective.json`: желаемый результат, критерий его достижения, ограничения, часы в неделю и часовой пояс. Неизвестные значения оставить `null`.
-3. Провести входную диагностику. Попытки записать в `state/assessment-log.jsonl`; отсутствие проверки не считать нулевым уровнем знаний.
-4. Составить дерево в `state/goals.json` по `templates/goal.json`. Оценки длительности являются гипотезами.
-5. Подготовить ближайший недельный план в `state/plans/` по шаблону. Зафиксировать критерии проверки до начала работы и сохранить план коммитом.
-6. Работать по циклу из инструкции. Карточки и попытки записывать сразу, недельный итог делать по завершении календарной недели.
-7. Перед коммитом выполнять проверку:
+1. Read the [workflow](docs/workflow.md) and [data model](docs/data-model.md). Agents must also read [AGENTS.md](AGENTS.md).
+2. Fill in `state/objective.json`: the intended outcome, success criteria, constraints, weekly hours, and time zone. Leave unknown values as `null`.
+3. Run an initial assessment. Record attempts in `state/assessment-log.jsonl`; an unassessed skill is not evidence of zero knowledge.
+4. Build the outcome tree in `state/goals.json` using `templates/goal.json`. Duration estimates are hypotheses.
+5. Prepare the next weekly plan in `state/plans/` using the template. Define assessment criteria before starting and commit the plan.
+6. Follow the workflow. Record cards and attempts as they happen; review the week when the calendar week ends.
+7. Run the checks before committing:
 
 ```sh
 python3 scripts/check.py
 python3 -m unittest discover -s tests -v
 ```
 
-Команды запускаются из корня репозитория и не изменяют данные. Проверка не требует сторонних Python-пакетов. Для проверки копии состояния: `python3 scripts/check.py --state /absolute/path/to/state`.
+Run these commands from the repository root. They do not modify learning data. The checker requires no third-party Python packages. To check a copy of the state, use `python3 scripts/check.py --state /absolute/path/to/state`.
 
-## Структура
+## Structure
 
-| Путь | Назначение |
+| Path | Purpose |
 | --- | --- |
-| `state/objective.json` | Общая цель, ограничения и бюджет времени |
-| `state/goals.json` | Дерево результатов и связи предпосылок |
-| `state/plans/` | Версии недельных планов |
-| `state/weekly-reviews/` | Итоги недель и решения о перепланировании |
-| `state/cards.json` | Общий реестр карточек, включая состояние планировщика |
-| `state/assessment-log.jsonl` | История практических проверок |
-| `state/card-review-log.jsonl` | История повторений карточек |
-| `templates/` | Образцы записей с пустыми значениями |
-| `docs/` | Инструкция и правила хранения |
-| `scripts/check.py` | Проверка структуры и согласованности ссылок |
+| `state/objective.json` | Overall objective, constraints, and time budget |
+| `state/goals.json` | Outcome tree and prerequisite links |
+| `state/plans/` | Weekly plan revisions |
+| `state/weekly-reviews/` | Weekly results and replanning decisions |
+| `state/cards.json` | Shared card registry, including scheduler state |
+| `state/assessment-log.jsonl` | History of practical assessments |
+| `state/card-review-log.jsonl` | History of card reviews |
+| `templates/` | Record templates with empty values |
+| `docs/` | Instructions and storage rules |
+| `scripts/check.py` | Structure and reference integrity checks |
 
-Все пути относительны корня репозитория. `state/` намеренно включён в Git: он содержит историю обучения. Секреты и материалы с персональными данными хранятся в игнорируемой `private/`. Публикация репозитория требует отдельного решения пользователя.
+All paths are relative to the repository root. `state/` is intentionally tracked in Git to preserve learning history. Store secrets and materials containing personal information in the ignored `private/` directory. Publishing the repository requires a separate user decision.
 
-## Следующие этапы
+## Next steps
 
-- Подключить библиотечную реализацию FSRS и команду повторения с сохранением события и нового состояния карточки одной операцией.
-- Добавить выбор очереди с учётом лимита времени, просроченных повторений и новых карточек.
-- Добавить автоматическое сохранение, защиту от конкурентной записи и проверку неизменности старых событий.
-- Автоматизировать подбор упражнений, отчёт за неделю и предложения по изменению плана.
-- Наполнить предметную программу отдельной правкой после диагностики и согласования цели.
+- Integrate a library implementation of FSRS and a review command that saves the event and updated card state atomically.
+- Add queue selection that respects time limits, overdue reviews, and new cards.
+- Add automatic saving, protection against concurrent writes, and checks for changes to historical events.
+- Automate exercise selection, weekly reports, and proposed plan adjustments.
+- Add a subject-specific curriculum in a separate change after the initial assessment and agreement on the objective.
 
-## Основания и границы
+## Foundations and limitations
 
-Методика использует повторение с интервалами, воспроизведение по памяти, объяснение причин и чередование разобранных примеров с самостоятельными задачами: [IES / What Works Clearinghouse](https://ies.ed.gov/ncee/wwc/PracticeGuide/1). Для расписания карточек выбран подход [FSRS](https://open-spaced-repetition.github.io/ts-fsrs/).
+The workflow uses spaced review, retrieval practice, explanatory questions, and alternating worked examples with independent exercises: [IES / What Works Clearinghouse](https://ies.ed.gov/ncee/wwc/PracticeGuide/1). Card scheduling will use [FSRS](https://open-spaced-repetition.github.io/ts-fsrs/).
 
-Эти источники обосновывают отдельные методы. Эффективность именно этого фреймворка пока не проверена. Её оцениваем по самостоятельным решениям новых задач, отложенным проверкам и затратам времени на ведение системы.
+These sources support individual methods. The effectiveness of this particular framework has not yet been evaluated. Evaluate it through independent solutions to new problems, delayed assessments, and time spent maintaining the system.

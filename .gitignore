@@ -15,5 +15,5 @@ build/
 .cache/
 tmp/
 *.log
-# Локальные секреты и материалы, которые не должны попадать в историю.
+# Local secrets and materials that must stay out of version history.
 private/

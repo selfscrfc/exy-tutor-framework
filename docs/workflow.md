@@ -1,60 +1,60 @@
-# Порядок работы
+# Workflow
 
-## 1. Старт
+## 1. Start
 
-Зафиксировать общую цель и наблюдаемый критерий достижения. Отдельно описать то, что зависит от ученика, и внешние условия результата. Указать доступные часы в неделю, ограничения и желательный срок, если он есть. Затем провести диагностику на небольших самостоятельных задачах. Пробелы подтверждать попытками; неизвестный уровень не заменять догадкой.
+Record the overall objective and an observable success criterion. Distinguish outcomes within the learner's control from external conditions. Record available weekly hours, constraints, and a target date if one exists. Then run an initial assessment using small independent tasks. Confirm gaps through attempts; do not replace an unknown proficiency level with a guess.
 
-Дерево показывает, какие результаты нужны для цели. Недельный план показывает, над чем работаем сейчас. Один лист обычно оценивается примерно в неделю доступной нагрузки, но календарь не определяет структуру дерева. Несколько коротких результатов могут войти в одну неделю, один результат может перейти в следующую.
+The tree describes the outcomes needed for the objective. The weekly plan describes the work currently selected. A leaf is usually estimated to take about one week of available study time, but the calendar does not define the tree structure. Several small outcomes can fit into one week; one outcome can continue into the next.
 
-Дерево использует `parent_id`. Предпосылки задаются `depends_on`: зависимости могут пересекать ветки, но не образуют циклов. Выбирать следующий результат нужно по его вкладу в общую цель, готовности предпосылок, обнаруженным пробелам и доступному времени.
+The tree uses `parent_id`. Prerequisites use `depends_on`: dependencies may cross branches but must not form cycles. Choose the next outcome based on its contribution to the overall objective, prerequisite readiness, observed gaps, and available time.
 
-## 2. Постепенная детализация
+## 2. Progressive planning
 
-- Ближайшие две недели: конкретные результаты, критерии, задания и оценки часов.
-- Следующие недели до восьмой включительно: ориентировочно недельные результаты с предпосылками; задания можно уточнить позже.
-- Дальше: крупные результаты с диапазонами трудоёмкости и явными неопределённостями.
+- The next two weeks: specific outcomes, criteria, activities, and estimated hours.
+- Subsequent weeks through week eight: approximately weekly outcomes with prerequisites; activities can be refined later.
+- Beyond that: broad outcomes with effort ranges and explicit uncertainties.
 
-Это начальные настройки, а не обязательные педагогические константы. Еженедельно сдвигать окно детализации и уточнять ближайший план. Раз в месяц пересматривать дальние ветки. При значительном изменении цели, нагрузки или диагностических результатов пересмотр делать раньше.
+These are initial settings, not mandatory pedagogical constants. Shift the planning window and refine the immediate plan weekly. Revisit distant branches monthly. Review sooner if the objective, available time, or assessment results change substantially.
 
-После первых недель сравнивать фактические часы с оценками сопоставимых задач. Различать нехватку времени, недооценённую сложность и пробел в предпосылках. Одна неудачная неделя не является основанием автоматически менять весь прогноз.
+After the first few weeks, compare actual hours with estimates for comparable tasks. Distinguish insufficient time, underestimated difficulty, and missing prerequisites. One unsuccessful week is not a reason to automatically change the entire forecast.
 
-## 3. План недели
+## 3. Weekly plan
 
-Создать `state/plans/YYYY-MM-DD.r1.json`, где дата - начало недели в выбранном часовом поясе. Указать ожидаемые результаты, критерии успеха, допустимую помощь, практические задания и бюджет. Из общего бюджета выделить время на повторения, практические проверки и небольшой запас; обучение не должно занимать весь доступный бюджет заранее.
+Create `state/plans/YYYY-MM-DD.r1.json`, using the week's start date in the chosen time zone. Record expected outcomes, success criteria, permitted assistance, practical activities, and a budget. Allocate part of the total budget to reviews, practical assessments, and a small buffer; do not fill all available time with new material in advance.
 
-После начала недели исходный план не редактировать. Если меняется объём, создать `r2`, заполнить `change_reason` и сохранить `r1`. В итогах сравнивать факт с исходным планом и отдельно объяснять изменения.
+Once the week begins, do not edit the original plan. If the scope changes, create `r2`, fill in `change_reason`, and preserve `r1`. Compare actual results with the original plan in the weekly report and explain changes separately.
 
-Задания подбираются из подходящего курса, документации или банка задач, либо создаются агентом с проверенным решением. Записывать источник и ожидаемый результат. Автоматического поиска заданий в текущем каркасе нет.
+Select activities from a suitable course, documentation, or exercise bank, or have the agent create them with a verified solution. Record the source and expected outcome. The current skeleton does not discover exercises automatically.
 
-## 4. Учебная сессия
+## 4. Learning session
 
-1. Прочитать текущий план, относящиеся к нему цели и последние ошибки.
-2. Выполнить запланированную часть повторений. Пока FSRS не подключён, выбирать её явно и не изображать автоматическое расписание.
-3. Для нового материала разобрать пример, затем дать самостоятельное упражнение.
-4. Разобрать фактическое решение. Зафиксировать помощь, результат и ссылку на артефакт в журнале проверок.
-5. Сформировать небольшое число полезных карточек из важных идей и ошибок. Проверить ответ и источник, удалить смысловые дубли через приостановку лишних карточек.
-6. Сохранить факты и текущую точку продолжения. Не требовать недельного отчёта после каждой сессии.
+1. Read the current plan, its related goals, and recent errors.
+2. Complete the planned portion of reviews. Until FSRS is integrated, select it explicitly and do not imply that an automatic schedule exists.
+3. For new material, work through an example and then give an independent exercise.
+4. Examine the actual solution. Record assistance, the result, and an artifact reference in the assessment log.
+5. Create a small number of useful cards from important ideas and errors. Verify answers and sources; suspend redundant cards rather than deleting their history.
+6. Save the facts and the point from which to continue. Do not require a weekly report after every session.
 
-Упражнения и итоговые проверки различаются: критерии последних фиксируются заранее, задания должны позволять проверить перенос на новый случай. Для кода предпочтительны реальные запуски и тесты; оценка ИИ не заменяет проверку результата.
+Practice exercises and completion assessments serve different purposes: define assessment criteria in advance, and use tasks that test transfer to a new case. For code, prefer real execution and tests; an AI rating does not replace checking the result.
 
-## 5. Завершение недели
+## 5. End of week
 
-Создать `state/weekly-reviews/YYYY-MM-DD.r1.json`: исходный план, использованная ревизия, фактическое время, выполненное, результаты проверок, ошибки и причины отклонений. Указать ID относящихся к неделе карточек и попыток. Обновить ближайший план по этим данным.
+Create `state/weekly-reviews/YYYY-MM-DD.r1.json`: the original plan, the effective revision, actual time, completed work, assessment results, errors, and reasons for deviations. Reference card and attempt IDs from the week. Update the immediate plan using this evidence.
 
-Неделя закрывается по календарю. Цель закрывается по критериям. `completed` означает подтверждённое выполнение в указанной проверке, а не вечное владение навыком. Позже контрольная задача может показать необходимость вернуться к цели: статус меняется, исходная успешная попытка остаётся в журнале.
+The calendar closes the week. Criteria close the goal. `completed` means the outcome was demonstrated in the referenced assessment, not permanent mastery. A later assessment may reveal that the goal needs more work: change its status while keeping the original successful attempt in the log.
 
-Чтобы завершить цель, все её критерии должны быть покрыты успешными самостоятельными попытками с артефактами и установленной политикой допустимой помощи. Для цели с дочерними узлами требуется завершить актуальные дочерние результаты; если нужен общий интеграционный результат, он проверяется отдельно по критериям родителя.
+To complete a goal, successful independent attempts must cover all its criteria, with artifacts and a defined assistance policy. A parent goal requires completion of its current child outcomes; if an integrated outcome is needed, assess it separately against the parent's criteria.
 
-## 6. Повторения и нагрузка
+## 6. Reviews and workload
 
-Реестр карточек хранится отдельно от дерева. Карточка может относиться к нескольким целям. Ответ по памяти фиксируется до показа решения; ошибки не записываются как `hard`. Оценки: `again` - не вспомнил, `hard` - вспомнил с трудом, `good` - вспомнил, `easy` - вспомнил легко.
+The card registry is separate from the tree. A card may relate to several goals. Record the recall attempt before showing the answer; do not rate a forgotten answer as `hard`. Ratings: `again` means not recalled, `hard` means recalled with difficulty, `good` means recalled, and `easy` means recalled easily.
 
-Будущий FSRS-планировщик получает фактическую оценку и время, возвращает новое состояние и срок повторения. Лимит времени сессии действует поверх расписания: сначала просроченные и назначенные повторения, затем новые карточки при наличии бюджета. Пропущенные повторения не считаются выполненными.
+The future FSRS scheduler takes the actual rating and timestamp and returns updated state and a review date. Apply session time limits on top of the schedule: overdue and due reviews first, then new cards if the budget allows. Missed reviews do not count as completed.
 
-Если очередь растёт, уменьшать добавление новых карточек, пересматривать их полезность и сложность. При повторяющихся ошибках возвращаться к объяснению и упражнению. Плохую карточку исправить или приостановить, не заставлять ученика бесконечно угадывать ответ.
+If the queue grows, reduce new cards and reconsider their usefulness and difficulty. Repeated errors should lead back to an explanation and exercise. Fix or suspend a poor card instead of making the learner repeatedly guess its answer.
 
-Для практических навыков дополнительно назначать отложенные задания на несколько тем. Память по карточкам, выполнение учебного плана и самостоятельное решение задач показывать отдельно. Общий процент освоения предмета из этих чисел не вычислять.
+For practical skills, also schedule delayed tasks covering several topics. Report card recall, plan completion, and independent problem solving separately. Do not derive a single subject-mastery percentage from these numbers.
 
-## 7. Проверка самой системы
+## 7. Evaluate the system
 
-После двух недель оценить: легче ли выбрать следующую работу, есть ли подтверждённые результаты, что сохраняется спустя время и сколько минут уходит на обслуживание. Удалять лишние поля и процедуры, если они не помогают принимать решения. Сравнивать качество решений на новых задачах, а не количество закрытых пунктов.
+After two weeks, check whether it is easier to choose the next activity, whether outcomes have been demonstrated, what is retained after a delay, and how many minutes maintenance takes. Remove fields and procedures that do not help make decisions. Compare the quality of solutions to new tasks rather than the number of checked-off items.
