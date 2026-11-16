@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 from exy import engine as e
+from exy import timekeeping, workload
 from exy.scheduling import parse_time
 from exy.store import ROOT, Store
 
@@ -49,7 +50,7 @@ def parser():
         item = sessions.add_parser(action)
         item.add_argument('--session')
         item.add_argument('--note', required=True)
-        item.add_argument('--minutes', type=float, required=True, help='Cumulative actual session minutes')
+        item.add_argument('--minutes', type=float, help='Cumulative manual minutes; omit for interval-tracked sessions')
     reviews = commands.add_parser('review').add_subparsers(dest='action', required=True)
     for action in ('queue', 'next', 'answer', 'rate', 'skip'):
         item = reviews.add_parser(action)
@@ -63,6 +64,29 @@ def parser():
     close = weeks.add_parser('close')
     close.add_argument('--week', required=True)
     close.add_argument('--notes-file', type=Path, help='Optional deviations, decisions, and next_focus')
+    workloads = commands.add_parser('workload').add_subparsers(dest='action', required=True)
+    analysis = workloads.add_parser('analyze')
+    analysis.add_argument('--file', required=True, type=Path)
+    workloads.add_parser('latest')
+    pace = commands.add_parser('pace')
+    pace.add_argument('--from-date', required=True)
+    pace.add_argument('--to-date', required=True)
+    times = commands.add_parser('time').add_subparsers(dest='action', required=True)
+    times.add_parser('status')
+    for action in ('start', 'pause', 'resume', 'stop', 'log'):
+        item = times.add_parser(action)
+        item.add_argument('--actor', required=True)
+        item.add_argument('--request-id', required=True, help='Reuse the same ID when retrying the same operation')
+        if action == 'start':
+            item.add_argument('--goal')
+            item.add_argument('--session')
+            item.add_argument('--activity', required=True)
+        elif action == 'log':
+            item.add_argument('--file', required=True, type=Path)
+        else:
+            item.add_argument('--timer', required=True)
+            item.add_argument('--version', type=int, required=True)
+            item.add_argument('--confirm-long', action='store_true')
     return p
 
 
@@ -84,6 +108,20 @@ def execute(s, a, now):
         return {'objective': s.get('objective.json'), 'foundation': s.get('foundation.json'),
                 'goal_counts': {status: sum(g['status'] == status for g in goals) for status in sorted({g['status'] for g in goals})},
                 'active_sessions': [x for x in s.get('sessions.json') if x['ended_at'] is None]}
+    if a.command == 'workload':
+        return workload.analyze(s, read(a.file), now) if a.action == 'analyze' else workload.latest(s)
+    if a.command == 'pace':
+        return workload.pace(s, a.from_date, a.to_date, now)
+    if a.command == 'time':
+        if a.action == 'status':
+            return timekeeping.timer_status(s, now)
+        if a.action == 'log':
+            return timekeeping.log_time(s, read(a.file), a.actor, a.request_id, now)
+        if a.action == 'start':
+            return timekeeping.mutate_timer(s, a.action, a.actor, a.request_id, now,
+                                           goal_id=a.goal, session_id=a.session, activity=a.activity)
+        return timekeeping.mutate_timer(s, a.action, a.actor, a.request_id, now,
+                                       timer_id=a.timer, expected_version=a.version, confirm_long=a.confirm_long)
     if a.command == 'configure':
         return e.configure(s, read(a.file))
     if a.command == 'foundation':

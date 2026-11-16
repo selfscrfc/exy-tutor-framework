@@ -53,6 +53,12 @@ Implemented: safe writes with interruption recovery, concurrent-writer serializa
 
 Before the real two-week pilot, the learner still needs to supply goals and plans, confirm the foundation, and complete any diagnostic work needed for placement. The tutor can then prepare the initial roadmap and the first two weekly plans. No simulated assessment is recorded as real progress.
 
+## Workload planning and agent integration
+
+The tutor analyzes scoped effort and deadlines before proposing a weekly and daily commitment. Recommendations retain their sources, uncertainty, explicit overhead, and capacity conflicts. Focus timers and manual intervals track actual work, while pace reports keep time adherence separate from demonstrated learning.
+
+See [workload and time tracking](docs/workload-and-time.md) and [MCP setup](docs/mcp.md). A local stdio MCP server lets trusted agents use registered instances with retry-safe requests and revision checks.
+
 ## Next steps
 
 - Run the two-week pilot and evaluate learning outcomes, retention, and maintenance effort.

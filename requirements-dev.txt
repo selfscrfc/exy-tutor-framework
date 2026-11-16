@@ -1,2 +1,2 @@
--r requirements.txt
+-r requirements-mcp.txt
 PyYAML==6.0.3

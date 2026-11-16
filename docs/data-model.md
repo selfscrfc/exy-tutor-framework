@@ -14,6 +14,11 @@ IDs are stable and unique within each type: `goal-001`, `card-001`, `assessment-
 | `settings.json` | Runtime version and serialized FSRS settings |
 | `sessions.json` | Session state, actual minutes, pending review, and continuation point |
 | `session-log.jsonl` | Append-only session snapshots |
+| `workload-log.jsonl` | Immutable workload inputs, scope snapshots, evidence references, and calculated ranges |
+| `timers.json` | Current timer owners, versions, and running/paused/stopped state |
+| `time-entries.jsonl` | Focus intervals and append-only corrections |
+| `time-events.jsonl` | Timer history and request IDs for safe retries |
+| `rpc-log.jsonl` | MCP operation receipts and replay results |
 | `objective.json` | Overall objective, success criteria, constraints, and workload settings |
 | `goals.json` | Array of nodes: parent, prerequisites, criteria, estimated hours, status, and evidence references |
 | `plans/*.json` | Weekly plan revision: goal IDs, expected outcomes and criteria, activities, and budget |
@@ -55,3 +60,7 @@ This provides consistent reads for CLI clients and recoverable commits across mu
 Scheduled review events include the attempted response, session ID, previous and next FSRS state, library review log, and scheduler settings. Scheduled reviews cannot be corrected by changing the historical rating in place; a replay-based correction command is not yet implemented. Assessment corrections use `supersedes`; a failed correction reopens a completed goal. Assessment criteria snapshots prevent changed criteria from reusing stale completion evidence.
 
 `init` upgrades legacy cards by replaying their current manual review events through FSRS without changing the old logs. Unknown schema or scheduler versions fail explicitly; upgrading the pinned library requires a deliberate migration. Keep using the pinned version during the pilot.
+
+## Workload and timing extensions
+
+`init` adds the optional timing/workload files to existing instances without changing older learning records. A foundation may reference a `workload_analysis_id`; recommendations remain separate from the confirmed weekly commitment. Weekly plans may include `daily_hours` for their seven dates. Timer-tracked sessions derive their total from current ledger intervals. Interval overlaps, stale timer versions, and inconsistent session totals are rejected. See [workload and time tracking](workload-and-time.md) for calculations and limits.

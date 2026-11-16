@@ -71,7 +71,7 @@ python3 tutor.py session end --minutes 60 --note "Next: review the error and sol
 
 `YYYY-MM-DD` is the plan's week-start date in the agreed time zone. A session must start within that week. `resume` returns its saved plan, current plan revision, selected goals, recent assessments, review queue, and continuation note. It also works after a session ends; use `start` to begin a new one.
 
-Minutes are actual cumulative session time supplied by the learner, not elapsed wall-clock time. Reviews are included in that total. Assessments can be recorded without a session for initial diagnostics. `--complete` is optional and only succeeds when all goal criteria have independent supporting evidence. Record permitted tools, actual assistance, a rubric, and an artifact. The program checks consistency, not whether an answer is genuinely correct.
+For manual sessions, minutes are actual cumulative session time supplied by the learner, not elapsed wall-clock time. For interval-tracked sessions, omit `--minutes`: the time ledger supplies the total. Reviews are included in that total. Assessments can be recorded without a session for initial diagnostics. `--complete` is optional and only succeeds when all goal criteria have independent supporting evidence. Record permitted tools, actual assistance, a rubric, and an artifact. The program checks consistency, not whether an answer is genuinely correct.
 
 To correct an assessment, add a new event with `supersedes` pointing to the old ID. A correction removes the old event from current completion evidence; historical records stay visible. Changing a criterion requires new evidence for that criterion.
 
@@ -110,6 +110,10 @@ python3 tutor.py plan save --file /tmp/next-week.json
 ```
 
 The optional notes file accepts `deviations`, `decisions`, `next_focus` (goal IDs), and `change_reason` (required for later report revisions). The report derives actual hours from session records, links evidence and cards, and compares actual time with the original budget. Its goal-status snapshot is explicitly taken when the report is generated. `carry` outputs a proposal without saving or rewriting anything; it excludes completed and dropped goals. If no work remains, choose new outcomes before saving a plan.
+
+## Workload, focus time, and pace
+
+See [workload and time tracking](workload-and-time.md) for evidence-based weekly/daily recommendations, durable timers, manual intervals, and pace reports. See [MCP integration](mcp.md) to use the same workflow from other agents.
 
 ## Storage and recovery
 

@@ -1,0 +1,16 @@
+{
+  "start_date": null,
+  "deadline": null,
+  "timezone": null,
+  "study_days": [],
+  "unavailable_dates": [],
+  "weekly_capacity_hours": null,
+  "daily_capacity_hours": null,
+  "effort": [],
+  "overhead_hours": {
+    "min": null,
+    "max": null,
+    "basis": ""
+  },
+  "buffer_percent": null
+}

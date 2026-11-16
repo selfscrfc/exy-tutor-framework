@@ -105,3 +105,6 @@ def validate_runtime(state, objective, goals, cards, assessments, reviews, plans
                 if 'criteria_snapshot' in event:
                     for criterion in event['criteria_snapshot']:
                         require(criterion in goal['criteria'], 'Completion evidence refers to an older criterion; reassess or reopen the goal')
+
+    from exy.time_validation import validate_time_state
+    validate_time_state(state, goals, sessions, plans, foundation)

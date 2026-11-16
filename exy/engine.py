@@ -45,6 +45,8 @@ def init(store):
     for name, value in defaults.items():
         if name not in store.files:
             store.put(name, value)
+    from exy.timekeeping import initialize
+    initialize(store)
     cards = store.get('cards.json')
     events = store.get('card-review-log.jsonl')
     replaced = {event['supersedes'] for event in events if event['supersedes']}
@@ -145,6 +147,9 @@ def carry_plan(store, source, target):
     plan = deepcopy(latest_plan(store, source))
     goals = store.get('goals.json')
     plan.update(week_id=target, revision=1, change_reason=None)
+    if 'daily_hours' in plan:
+        offset = date.fromisoformat(target) - date.fromisoformat(source)
+        plan['daily_hours'] = {(date.fromisoformat(day)+offset).isoformat(): hours for day, hours in plan['daily_hours'].items()}
     plan['items'] = [item for item in plan['items'] if lookup(goals, item['goal_id'])['status'] not in {'completed', 'dropped'}]
     plan['carried_from'] = source
     return plan
@@ -262,7 +267,10 @@ def context(store, session, now):
     assessments = store.get('assessment-log.jsonl')
     replaced = {a['supersedes'] for a in assessments if a['supersedes']}
     recent = [a for a in assessments if a['goal_id'] in session['goal_ids'] and a['id'] not in replaced][-10:]
+    from exy.timekeeping import timer_status
+    from exy.workload import latest
     return {'session': session, 'objective': store.get('objective.json'),
+            'timers': timer_status(store, now), 'workload_analysis': latest(store),
             'plan': latest_plan(store, session['week_id']),
             'session_plan': store.get('plans/' + session['plan_file']),
             'goals': [lookup(goals, i) for i in session['goal_ids']], 'recent_assessments': recent,
@@ -306,7 +314,13 @@ def session_resume(store, identifier, now):
 def session_finish(store, identifier, note, minutes, now, end):
     session = current_session(store, identifier)
     need(note.strip(), 'Save a concrete continuation note')
-    need(minutes >= session['actual_minutes'], 'Cumulative actual minutes cannot decrease')
+    need(not any(t['status'] == 'running' and t['session_id'] == session['id'] for t in store.get('timers.json', [])),
+         'Pause or stop the running timer before saving a session total')
+    if session.get('time_tracking') == 'intervals':
+        need(minutes is None or abs(minutes - session['actual_minutes']) < 0.000001,
+             'Interval-tracked sessions derive minutes from the time ledger; omit --minutes')
+        minutes = session['actual_minutes']
+    need(minutes is not None and minutes >= session['actual_minutes'], 'Supply cumulative actual minutes for a manual session')
     if end:
         need(session['pending_review'] is None, 'Rate or skip the pending card before ending the session')
     session.update(continuation=note, actual_minutes=minutes)

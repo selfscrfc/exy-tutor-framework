@@ -8,7 +8,8 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SINGLE_FILES = ('objective.json', 'goals.json', 'cards.json', 'assessment-log.jsonl',
-                'card-review-log.jsonl', 'sessions.json', 'session-log.jsonl', 'settings.json', 'foundation.json')
+                'card-review-log.jsonl', 'sessions.json', 'session-log.jsonl', 'settings.json', 'foundation.json',
+                'timers.json', 'time-entries.jsonl', 'time-events.jsonl', 'workload-log.jsonl', 'rpc-log.jsonl')
 
 
 def encode(value):

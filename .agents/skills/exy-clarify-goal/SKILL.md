@@ -21,13 +21,25 @@ Resolve the dimensions that matter for this use case:
 
 - **Intended outcome and motivation:** what should change, why it matters, and what counts as success. Separate controllable learning outcomes from external outcomes such as a job offer.
 - **Scope:** included and excluded topics, target roles or situations, must-have skills, priorities, and acceptable alternatives. For career goals, request representative vacancies if the target remains unclear; research current requirements only when needed and label inferences.
-- **Time and capacity:** target date, its flexibility, sustainable weekly hours, scheduling constraints, and time zone. Treat no deadline as an explicit choice rather than an unknown date.
+- **Time and capacity:** target date, its flexibility, realistic available hours by day, blackout dates, scheduling constraints, and time zone. Treat no deadline as an explicit choice rather than an unknown date. Available capacity is an input to analysis; do not treat a preferred number of hours as the required workload.
 - **Starting point:** experience, completed work, known difficulties, and evidence. Label self-reports as self-reports; a confident answer about experience is not a proficiency assessment.
 - **Resources and constraints:** courses, notes, equipment, access, costs, language, and any accessibility needs the user raises. Ask only where the answer could affect the plan.
 - **Verification:** how independent work will be assessed, permitted tools, artifacts to keep, and how progress will be checked after a delay.
 - **Tradeoffs and feasibility:** if scope exceeds capacity, present concrete options to narrow scope, move the date, or change effort. Do not silently promise all three.
 
 If the user wants to supply plans later, save known information and the remaining questions, then stop the interview. Do not invent a curriculum to fill the gap. If they decline a nonessential detail, record the decision and proceed.
+
+## Analyze required time before asking for a commitment
+
+Separate **required effort**, **available capacity**, and **agreed commitment**. The learner supplies constraints and availability; the tutor analyzes what the objective and deadline require.
+
+Break the scope into provisional leaf outcomes before scheduling weeks. For each remaining outcome, estimate a range of hours from diagnostic evidence, comparable completed work, or a cited curriculum/exercise breakdown. State the rationale, sources, prerequisites, and uncertainty. Do not invent a universal number of hours to reach a role. If a source is unavailable, label the estimate as an assumption and explain what would calibrate it. If key estimates are missing, keep the recommendation unresolved.
+
+Use `template workload`, then `workload analyze --file <prepared-json>` (or MCP `analyze_workload`). Include the start date, deadline, available study days, known blackout dates, optional daily/weekly capacity, and explicit overhead for reviews and assessments. Do not count parent and child effort together or add overhead already included in leaf estimates. Explain any chosen buffer; it is a planning assumption, not a research finding.
+
+Present the calculated total effort range, required weekly hours, hours per study day, and allocation across actual dates. Compare that demand with available capacity. When they conflict, propose concrete scope, deadline, or capacity alternatives. Ask the learner to accept a specific sustainable weekly and daily commitment after seeing that analysis. Store the selected analysis ID as optional `workload_analysis_id` in the foundation. Keep its estimate distinct from the confirmed `weekly_hours` commitment.
+
+After agreement, give each weekly plan an optional `daily_hours` map covering its seven dates and summing to the weekly budget. Track actual focus intervals with `time` commands or MCP. Start a timer only when the learner starts working, pause it for interruptions, and never count agent computation as learner study time. Use `pace` to compare planned time with logged time and independently verified outcomes. Re-estimate remaining effort when evidence changes; do not subtract logged hours as if they automatically completed learning. Show confidence and sample counts when extrapolating observed pace.
 
 ## Establish evidence without turning intake into a course
 
