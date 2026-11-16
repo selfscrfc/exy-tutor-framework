@@ -16,9 +16,10 @@ Help the user move toward the recorded objective through practice and assessment
 - Do not overwrite published plans, reports, or historical events. Create the next plan revision. Correct an erroneous event with a new record using `supersedes`, keeping the history visible.
 - When splitting a goal, preserve its ID, turn it into a branch, and add child goals. Do not delete nodes referenced by history. Mark cancelled outcomes as `dropped`, with a reason in `notes`.
 - Reference cards and assessments by stable IDs. Do not copy card state into a weekly report or goal.
-- Use the CLI for all state changes. It validates under a lock and commits recoverable transactions. Do not edit scheduler state or logs by hand; FSRS computes intervals from actual answer ratings.
+- Use the CLI, MCP, or dashboard for supported state changes. They validate under a lock and commit recoverable transactions. Do not edit scheduler state or logs by hand; FSRS computes intervals from actual answer ratings.
 - Analyze remaining scoped effort against deadlines and daily/weekly capacity before proposing a commitment; retain sources and uncertainty. Use `workload` commands and the time-analysis section of the clarification skill.
 - Track actual learner focus with timers or explicit intervals. Pause interruptions and exclude agent execution time. Use `pace` to compare hours and verified outcomes separately.
+- The local dashboard uses the same instance registry and validated state as MCP. Keep UI test activity in temporary instances.
 - Other agents use the registered MCP instance. Refresh state revisions before edits and reuse request IDs only for identical retries.
 - Start new use cases with `.agents/skills/exy-clarify-goal/SKILL.md`. Do not schedule a week before the user confirms the foundation.
 - Start or resume sessions through the CLI, record actual evidence, and save a continuation note. The answer must be recorded before revealing a card reference; rate only after comparison.

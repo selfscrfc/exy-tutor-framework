@@ -59,6 +59,16 @@ The tutor analyzes scoped effort and deadlines before proposing a weekly and dai
 
 See [workload and time tracking](docs/workload-and-time.md) and [MCP setup](docs/mcp.md). A local stdio MCP server lets trusted agents use registered instances with retry-safe requests and revision checks.
 
+## Local dashboard
+
+Manage connected learning workspaces, browse outcomes and weekly plans, and run focus timers in a local UI:
+
+```sh
+.venv/bin/python scripts/dashboard.py
+```
+
+Open `http://127.0.0.1:8765`. The dashboard shares the MCP instance registry and validated learning state, so agents and the interface see the same progress. See the [dashboard guide](docs/dashboard.md) for connecting workspaces and using the timer.
+
 ## Next steps
 
 - Run the two-week pilot and evaluate learning outcomes, retention, and maintenance effort.

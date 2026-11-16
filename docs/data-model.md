@@ -18,7 +18,7 @@ IDs are stable and unique within each type: `goal-001`, `card-001`, `assessment-
 | `timers.json` | Current timer owners, versions, and running/paused/stopped state |
 | `time-entries.jsonl` | Focus intervals and append-only corrections |
 | `time-events.jsonl` | Timer history and request IDs for safe retries |
-| `rpc-log.jsonl` | MCP operation receipts and replay results |
+| `rpc-log.jsonl` | Shared MCP and dashboard operation receipts and replay results |
 | `objective.json` | Overall objective, success criteria, constraints, and workload settings |
 | `goals.json` | Array of nodes: parent, prerequisites, criteria, estimated hours, status, and evidence references |
 | `plans/*.json` | Weekly plan revision: goal IDs, expected outcomes and criteria, activities, and budget |

@@ -1,6 +1,5 @@
 """Local stdio MCP API for explicitly registered learning instances."""
 from datetime import datetime, timezone
-import json
 from functools import wraps
 from pathlib import Path
 from typing import Any, Literal
@@ -11,6 +10,7 @@ from mcp.types import ToolAnnotations
 
 from exy import engine, timekeeping, workload
 from exy.store import Store
+from exy.instances import InstanceService
 
 READ = ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=False)
 WRITE = ToolAnnotations(readOnlyHint=False, destructiveHint=False, idempotentHint=True, openWorldHint=False)
@@ -36,39 +36,9 @@ def build_server(registry):
         'Reuse request_id for retries. Refresh context after a stale-revision error. Actor labels are audit labels, not authentication.'),
         log_level='WARNING')
 
-    def mapping():
-        value = json.loads(registry.read_text())
-        engine.need(value.get('schema_version') == 1 and isinstance(value.get('instances'), dict), 'Invalid instance registry')
-        return value['instances']
-
-    def state_for(instance):
-        instances = mapping()
-        engine.need(instance in instances, 'Unknown instance; an operator must register it locally first')
-        path = Path(instances[instance]).expanduser().resolve()
-        engine.need(path.is_dir() and (path / 'settings.json').is_file(), 'Registered instance is not initialized')
-        return path
-
-    def revision(store):
-        return engine.fingerprint(store.files)
-
-    def mutate(instance, request_id, operation, data, expected_revision, fn):
-        engine.need(request_id.strip(), 'A stable request_id is required')
-        request_hash = engine.fingerprint({'operation': operation, 'data': data, 'expected_revision': expected_revision})
-        with Store(state_for(instance)) as store:
-            store.validate()
-            for event in store.get('rpc-log.jsonl', []):
-                if event['request_id'] == request_id:
-                    engine.need(event['request_hash'] == request_hash, 'request_id was used with different arguments')
-                    return {'result': event['result'], 'state_revision': revision(store), 'replayed': True}
-            engine.need(expected_revision is None or expected_revision == revision(store),
-                        'Stale state_revision; refresh context and reconsider the change')
-            timekeeping.initialize(store)
-            now = datetime.now(timezone.utc)
-            result = fn(store, now)
-            store.append('rpc-log.jsonl', {'request_id': request_id, 'request_hash': request_hash,
-                                          'operation': operation, 'occurred_at': now.isoformat(), 'result': result})
-            store.commit()
-            return {'result': result, 'state_revision': revision(store), 'replayed': False}
+    service = InstanceService(registry)
+    mapping, state_for = service.mapping, service.state_for
+    revision, mutate = service.revision, service.mutate
 
     @server.tool(annotations=READ, structured_output=True)
     @tool_errors
