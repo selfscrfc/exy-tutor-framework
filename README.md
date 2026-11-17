@@ -61,13 +61,13 @@ See [workload and time tracking](docs/workload-and-time.md) and [MCP setup](docs
 
 ## Local dashboard
 
-Manage connected learning workspaces, browse outcomes and weekly plans, and run focus timers in a local UI:
+The dashboard source lives in the separate sibling repository `~/exy-dashboard`. Manage connected learning workspaces, browse outcomes and weekly plans, and run focus timers:
 
 ```sh
-.venv/bin/python scripts/dashboard.py
+python3 ../exy-dashboard/dashboard.py
 ```
 
-Open `http://127.0.0.1:8765`. The dashboard shares the MCP instance registry and validated learning state, so agents and the interface see the same progress. See the [dashboard guide](docs/dashboard.md) for connecting workspaces and using the timer.
+Open `http://127.0.0.1:8765`. The dashboard shares the MCP instance registry and validated learning state, so agents and the interface see the same progress. See `~/exy-dashboard/README.md` for setup and usage. The shared runtime stays in this repository.
 
 ## Next steps
 

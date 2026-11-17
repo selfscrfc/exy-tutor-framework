@@ -71,7 +71,7 @@ For `tutor_action`, `data` contains the template record for foundation, goal, pl
 | `review_rate` | `rating`, `seconds`, optional `session_id` |
 | `week_close` | `week`, optional `notes` |
 
-The [local dashboard](dashboard.md) uses this same registry and state. Connecting or disconnecting a workspace in the UI also changes which names MCP clients can access.
+The local dashboard in `~/exy-dashboard` uses this same registry and state. Connecting or disconnecting a workspace in the UI also changes which names MCP clients can access.
 
 ## Coordination between agents
 
